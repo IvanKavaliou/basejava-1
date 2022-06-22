@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ru.javawebinar.basejava.model.Resume class
@@ -13,6 +12,10 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
+    private List<Contact> contacts = new ArrayList<>();
+
+    private Map<SectionType, Section> sections = new HashMap<>();
+
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
@@ -22,6 +25,27 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void addContact(Contact contact) {
+        contacts.add(contact);
+    }
+
+    public Map<SectionType, Section> addSections() {
+        return sections;
+    }
+
+    public void addSection(Section section) {
+        AbstractSection section1 = (AbstractSection) section;
+        sections.put(section1.getType(), section);
     }
 
     public String getUuid() {
@@ -49,7 +73,12 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public String toString() {
-        return uuid + '(' + fullName + ')';
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", contacts=" + contacts +
+                ", sections=" + sections +
+                '}';
     }
 
     @Override
