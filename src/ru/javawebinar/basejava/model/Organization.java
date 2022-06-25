@@ -125,4 +125,12 @@ public class Organization implements Serializable {
             return "Position(" + startDate + ',' + endDate + ',' + title + ',' + description + ')';
         }
     }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
 }
