@@ -87,7 +87,7 @@ public class SqlStorage implements Storage {
                 result.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
             }
             return result;
-        }, "SELECT * FROM resume");
+        }, "SELECT * FROM resume ORDER BY uuid, full_name");
     }
 
     @Override
