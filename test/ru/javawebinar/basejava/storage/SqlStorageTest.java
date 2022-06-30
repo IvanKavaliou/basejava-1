@@ -1,0 +1,12 @@
+package ru.javawebinar.basejava.storage;
+
+import ru.javawebinar.basejava.Config;
+
+public class SqlStorageTest extends AbstractStorageTest{
+    private static Config config = Config.get();
+    public SqlStorageTest() {
+        super(new SqlStorage(config.getUrl(),
+                config.getUser(),
+                config.getPassword()));
+    }
+}
