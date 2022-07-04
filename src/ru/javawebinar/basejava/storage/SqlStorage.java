@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // TODO implement Section (except OrganizationSection)
 // TODO Join and split ListSection by `\n`
@@ -89,10 +90,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("" +
-                "   SELECT * FROM resume r\n" +
-                "LEFT JOIN contact c ON r.uuid = c.resume_uuid\n" +
-                "ORDER BY full_name, uuid", ps -> {
+        return sqlHelper.execute("SELECT * FROM resume r\n" +
+                                     "ORDER BY full_name, uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
@@ -102,9 +101,19 @@ public class SqlStorage implements Storage {
                     resume = new Resume(uuid, rs.getString("full_name"));
                     map.put(uuid, resume);
                 }
-                addContact(rs, resume);
             }
+            joinContacts(map);
             return new ArrayList<>(map.values());
+        });
+    }
+
+    private void joinContacts(Map<String, Resume> map){
+        sqlHelper.execute("SELECT * FROM contact", ps -> {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                map.get(rs.getString("resume_uuid")).addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+            }
+            return null;
         });
     }
 
